@@ -1,0 +1,92 @@
+---
+title: "HW1_Class Survey"
+author: "Rui Li"
+date: "8/30/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import csv.
+
+```{r}
+#install.packages("readr")
+library("readr")
+C1survey <-
+  read.csv(
+    "https://raw.githubusercontent.com/kijohnson/ADA-FAll-2020/master/Class%20One/Class%201%20Survey%20Fall%202020.csv"
+    )
+```
+
+## 2. Determine: a. the number of observations (i.e. the number of people who filled out the survey) and b. the number of variables in the dataframe.
+```{r}
+dim(C1survey)
+```
+## 3. a. Rename the column variables to something shorter and that is descriptive of what the variable is about (for example like_dogs for the ‘Do you like dogs?’ question variable) and b. Display that they are renamed.
+```{r}
+colnames(C1survey)
+names(C1survey)[1:8] <- c("ID","cats.like","dogs.like","item.island","slogan","favorite.day","kind","favorite.food")
+names(C1survey)[9:18] <- c("favorite.drink","favorite.drink","favorite.season","favorite.season","favorite.month","hobby","program","primary.specialization","primary.software","R.experience","coding.comfortable","coding.experience")
+names(C1survey)[19:27] <- c("learn.hope","major.area","favorite.number","bday","bmonth","country","state","city","education")
+colnames(C1survey)
+```
+
+## 4. Write code to determine and display the number of factor, integer, numerical, and character variables there are in the C1survey dataset.
+```{r}
+table(sapply(C1survey,class))
+```
+
+## 5. a. Using code, check the bday and bmonth variables for any unusual or missing values. If you find any, b. describe what you will do with the unusual values in a comment before or immediately following the code that does it, and c. after you have cleaned up any unusual values, find the median bday and month. *Note: please make sure that your bday and month variables are numeric before doing statistics
+```{r}
+C1survey$bday
+C1survey$bmonth
+## I would change the unusual values to the number
+C1survey$bday[31] <- 26
+C1survey$bmonth[8] <- 12
+C1survey$bmonth[17] <- 8
+C1survey$bmonth[25] <- 8
+C1survey$bmonth[31] <- 3
+C1survey$bday <- as.numeric(as.character(C1survey$bday))
+C1survey$bmonth <- as.numeric(as.character(C1survey$bmonth))
+class(C1survey$bday)
+median(C1survey$bday)
+median(C1survey$bmonth)
+```
+##6. a. Create a new variable called bseason that gives the season according to Northern Meteorological season in which respondents were born (winter=12/1 to 2/29, spring=3/1 to 5/31, summer=6/1 to 8/31, fall=9/1 to 11/30). b. Using the table function, print a table of Seasons in the columns and bmonths in the rows that allows you to check that the coding is correct c. Sum the columns using the addmargins function to answer the question of how many classmates were born in each season? Include your answer in the code you turn in.
+```{r}
+
+#a
+
+C1survey$bmonth
+#winter
+C1survey$bseason[C1survey$bmonth %in% c(12,1,2)] <- "winter"
+
+#spring
+C1survey$bseason[C1survey$bmonth %in% c(3,4,5)] <- "spring"
+
+#summer
+C1survey$bseason[C1survey$bmonth %in% c(6,7,8)] <- "summer"
+
+#fall'
+C1survey$bseason[C1survey$bmonth %in% c(9,10,11)] <- "fall"
+
+C1survey$bseason
+
+#b
+table(C1survey$bseason,C1survey$bmonth)
+  
+#c
+addmargins(table(C1survey$bseason,C1survey$bmonth))  
+```
+
+#7. Pick your favorite variable to analyze, come up with a question you want to answer with that variable, generate the code, and provide an answer to your question. Describe what you did using comments
+
+```{r}
+#How many people like cats?
+table(C1survey$cats.like)
+
+#I used table to check how manng people like cats.
+```
+
